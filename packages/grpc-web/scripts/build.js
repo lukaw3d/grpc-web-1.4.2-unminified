@@ -39,7 +39,7 @@ const closureArgs = [].concat(
     `--compilation_level=ADVANCED_OPTIMIZATIONS`,
     `--generate_exports`,
     `--export_local_property_definitions`,
-    `--js_output_file=${indexPath}`,
+    `--js_output_file="${indexPath} --compilation_level=ADVANCED_OPTIMIZATIONS.js"`,
   ]
 );
 
@@ -52,6 +52,9 @@ let child = exec(closureCommand);
 
 child.stdout.pipe(process.stdout);
 child.stderr.pipe(process.stderr);
+
+exec(closureCommand.replaceAll('--compilation_level=ADVANCED_OPTIMIZATIONS', '--compilation_level=BUNDLE'));
+exec(closureCommand.replaceAll('--compilation_level=ADVANCED_OPTIMIZATIONS', '--compilation_level=SIMPLE --formatting=PRETTY_PRINT --debug'));
 
 function createSymlink(target, path) {
   fs.symlink(target, path, (err) => {
